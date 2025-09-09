@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart | Meera Bangles</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="cart.js" defer></script>
+
+    <style>
+        :root { --primary-color: #b08d57; --secondary-color: #4a4a4a; --background-color: #fdfaf6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--background-color); color: var(--secondary-color); line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header & Footer Styles */
+        .main-header { background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 1rem 0; }
+        .main-header .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        .logo { font-size: 1.8rem; color: var(--primary-color); text-decoration: none; font-family: 'Playfair Display', serif; }
+        .main-nav ul { list-style: none; display: flex; gap: 25px; align-items: center; }
+        .main-nav a { text-decoration: none; color: var(--secondary-color); font-weight: 500; }
+        .main-footer { background-color: var(--secondary-color); color: #fff; padding: 40px 0; text-align: center; margin-top: 60px; }
+
+        /* Cart Page Specific Styles */
+        .page-header { padding: 40px 0; text-align: center; }
+        .page-header h1 { font-size: 3rem; font-family: 'Playfair Display', serif; }
+        
+        .cart-content { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .cart-item:last-child { border-bottom: none; }
+        .item-details h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; }
+        .item-price { font-weight: 600; color: var(--primary-color); }
+        .remove-btn { background: none; border: 1px solid #ddd; color: #999; padding: 5px 10px; border-radius: 5px; cursor: pointer; transition: all 0.3s ease; }
+        .remove-btn:hover { background-color: #e74c3c; color: white; border-color: #e74c3c; }
+
+        .cart-summary { margin-top: 30px; text-align: right; }
+        .total-price { font-size: 1.8rem; font-weight: bold; margin-bottom: 20px; }
+        .checkout-btn { background-color: var(--primary-color); color: white; padding: 15px 40px; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; transition: background-color 0.3s ease; }
+        .checkout-btn:hover { background-color: #9a794b; }
+
+        .empty-cart { text-align: center; padding: 50px 0; }
+        .empty-cart p { font-size: 1.2rem; margin-bottom: 20px; }
+        .shop-now-btn { background-color: var(--primary-color); color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; }
+          @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+              .contact-grid {
+        grid-template-columns: 1fr; /* Stack contact details and form */
+    }
+            .container { padding: 0 15px; }
+            .main-header .container { flex-direction: column; gap: 15px; }
+            .main-nav ul { padding: 0; justify-content: center; flex-wrap: wrap; }
+            .page-header { padding: 40px 0; }
+            .page-header h1 { font-size: 2.5rem; }
+            .categories { gap: 10px; margin-bottom: 30px; }
+            .category-btn { padding: 8px 16px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo"> Meera Bangles ✨</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li id="user-status"><a href="login.html">Login / Sign Up</a></li>
+                    <li><a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h1>Your Shopping Cart</h1>
+        </div>
+        <div id="cart-content">
+            </div>
+    </main>
+
+    <footer class="main-footer">
+        </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', displayCartItems);
+
+        function displayCartItems() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartContent = document.getElementById('cart-content');
+            
+            if (cart.length === 0) {
+                cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <p>Your cart is currently empty.</p>
+                        <a href="shop.html" class="shop-now-btn">Shop Now</a>
+                    </div>`;
+                return;
+            }
+
+            let itemsHTML = '<div class="cart-content">';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                itemsHTML += `
+                    <div class="cart-item">
+                        <div class="item-details"><h3>${item.name}</h3></div>
+                        <div class="item-actions">
+                            <span class="item-price">rs ${item.price}/-</span>
+                            <button class="remove-btn" data-index="${index}">Remove</button>
+                        </div>
+                    </div>`;
+                total += parseFloat(item.price);
+            });
+
+            itemsHTML += `</div>
+                <div class="cart-summary">
+                    <p class="total-price">Total: rs ${total.toFixed(2)}/-</p>
+                    <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+                </div>`;
+            
+            cartContent.innerHTML = itemsHTML;
+            addEventListeners();
+        }
+
+        function addEventListeners() {
+            document.querySelectorAll('.remove-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const indexToRemove = event.target.getAttribute('data-index');
+                    removeItem(indexToRemove);
+                });
+            });
+
+            const checkoutButton = document.querySelector('.checkout-btn');
+            if (checkoutButton) {
+                checkoutButton.addEventListener('click', placeOrder);
+            }
+        }
+
+        function removeItem(index) {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            displayCartItems(); // Refresh the cart view
+            updateCartCount(); // This function is in cart.js to update the header
+        }
+
+        async function placeOrder() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const userId = localStorage.getItem('userId');
+            
+            if (!userId) {
+                alert('Please log in to place an order.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let totalPrice = 0;
+            cart.forEach(item => { totalPrice += parseFloat(item.price); });
+
+            try {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: userId,
+                        cartItems: cart,
+                        totalPrice: totalPrice
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert('Order placed successfully! Thank you.');
+                    localStorage.removeItem('cart'); // Clear the cart
+                    updateCartCount();
+                    displayCartItems();
+                } else {
+                    alert('Error: ' + result.message);
+                }
+            } catch (error) {
+                console.error('Checkout failed:', error);
+                alert('An error occurred during checkout.');
+            }
+        }
+    </script>
+</body>
+</html>

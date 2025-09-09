@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Meera Bangles</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        /* THE CSS IS IDENTICAL TO index.html TO MAINTAIN CONSISTENCY */
+        :root {
+            --primary-color: #b08d57; --secondary-color: #4a4a4a; --background-color: #fdfaf6; --accent-color: #d1a3a4;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--background-color); color: var(--secondary-color); line-height: 1.6; }
+        h1, h2, h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* --- Header & Navigation --- */
+        .main-header { background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; color: var(--primary-color); text-decoration: none; }
+        .main-nav ul { list-style: none; display: flex; gap: 25px; }
+        .main-nav a { text-decoration: none; color: var(--secondary-color); font-weight: 500; font-size: 1rem; transition: color 0.3s ease; }
+        .main-nav a:hover { color: var(--primary-color); }
+        
+        /* --- Generic Page Header --- */
+        .page-header {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            text-align: center;
+        }
+
+        /* --- About Section Specific Styles --- */
+        .about-section {
+            padding-bottom: 60px;
+        }
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+        .about-image {
+            flex: 1;
+        }
+        .about-image img {
+            max-width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .about-text {
+            flex: 1;
+        }
+        .about-text h3 {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        /* --- Footer --- */
+        .main-footer { background-color: var(--secondary-color); color: #fff; padding: 40px 0; text-align: center; margin-top: 60px; }
+        .main-footer p { margin: 0; }
+        
+        /* --- Responsive Design --- */
+       /* --- Responsive Design for Mobile --- */
+@media (max-width: 768px) {
+    /* --- General Adjustments --- */
+    h1 {
+        font-size: 2.2rem; /* Make main headings smaller */
+    }
+    h2 {
+        font-size: 1.8rem; /* Make section titles smaller */
+    }
+    .container {
+        padding: 0 15px; /* Reduce side padding on mobile */
+    }
+
+    /* --- Header & Navigation --- */
+    .main-header .container {
+        flex-direction: column; /* Stack the logo and nav menu */
+        gap: 15px;
+    }
+    .main-nav ul {
+        padding: 0;
+        justify-content: center; /* Center the nav items */
+        flex-wrap: wrap; /* Allow nav items to wrap to a new line */
+    }
+    
+    /* --- Homepage Hero Section --- */
+    .hero-content h1 {
+        font-size: 2.8rem;
+    }
+    .hero-content p {
+        font-size: 1.2rem;
+    }
+
+    /* --- Shop & Other Page Headers --- */
+    .page-header {
+        padding: 40px 0;
+    }
+    .page-header h1 {
+        font-size: 2.5rem;
+    }
+
+    /* --- Product Detail Page Layout --- */
+    .product-detail-section {
+        grid-template-columns: 1fr; /* Stack image gallery and product info */
+        gap: 40px;
+    }
+    .product-info h1 {
+        font-size: 2.5rem;
+    }
+
+    /* --- Contact Page Layout --- */
+    .contact-grid {
+        grid-template-columns: 1fr; /* Stack contact details and form */
+    }
+}
+    </style>
+</head>
+<body>
+
+<head>
+    <script src="cart.js" defer></script>
+</head>
+<body>
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo"> Meera Bangles ✨</a>
+            <nav class="main-nav">
+            <ul>
+    <li><a href="index.html">Home</a></li>
+    <li><a href="shop.html">Shop</a></li>
+    <li><a href="about.html">About Us</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li id="user-status"></li> 
+   <li><a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+</ul>
+            </nav>
+        </div>
+    </header>
+
+
+    <main>
+        <div class="page-header">
+            <h1>Our Story</h1>
+        </div>
+
+        <section class="about-section">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-image">
+                        <img src="https://as1.ftcdn.net/v2/jpg/03/40/38/90/1000_F_340389097_5yv4QtXoqm6itNpuw8E4O7Kxp9BUSwcO.jpg" alt="Founder of Meera Bangles">
+                    </div>
+                    <div class="about-text">
+                        <h3>Handcrafted with Passion</h3>
+                        <p>Meera Bangles was born from a love for traditional Indian artistry and a desire to bring its beauty to the modern world. Every bangle in our collection is more than just an accessory; it's a piece of art, a story waiting to be told.</p>
+                        <br>
+                        <p></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 Meera bangles . All Rights Reserved.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

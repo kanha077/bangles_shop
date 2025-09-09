@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Meera Bangles</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="cart.js" defer></script>
+
+    <style>
+        :root { --primary-color: #b08d57; --secondary-color: #4a4a4a; --background-color: #fdfaf6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--background-color); color: var(--secondary-color); line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        
+        .main-header {
+             .main-header { background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 1rem 0; }
+        .main-header .container { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; }
+        .logo { font-size: 1.8rem; color: var(--primary-color); text-decoration: none; font-family: 'Playfair Display', serif; }
+        .main-nav ul { list-style: none; display: flex; gap: 25px; align-items: center; }
+        .main-nav a { text-decoration: none; color: var(--secondary-color); font-weight: 500; }
+        .main-footer { background-color: var(--secondary-color); color: #fff; padding: 40px 0; text-align: center; margin-top: 60px; } }
+        
+        .page-header h1 { font-size: 3rem; text-align: center; font-family: 'Playfair Display', serif; padding: 40px 0; }
+        .checkout-form { background-color: #fff; padding: 30px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
+        .checkbox-group { display: flex; align-items: center; gap: 10px; }
+        #whatsapp-group { display: none; /* Hidden by default */ }
+        .place-order-btn { display: block; width: 100%; background-color: var(--primary-color); color: white; padding: 15px; border: none; border-radius: 5px; font-size: 1.2rem; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <header class="main-header">
+        <!-- Paste your standard header HTML here -->
+    </header>
+
+    <main class="container">
+        <div class="page-header"><h1>Checkout</h1></div>
+        <form class="checkout-form" id="checkoutForm">
+            <h2>Shipping Details</h2>
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <input type="text" id="fullName" required>
+            </div>
+            <div class="form-group">
+                <label for="mobileNumber">Mobile Number (+91)</label>
+                <input type="tel" id="mobileNumber" pattern="[6-9][0-9]{9}" placeholder="e.g. 9876543210" required>
+            </div>
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="isWhatsapp" checked>
+                <label for="isWhatsapp">This is my WhatsApp number</label>
+            </div>
+            <div class="form-group" id="whatsapp-group">
+                <label for="whatsappNumber">WhatsApp Number (+91)</label>
+                <input type="tel" id="whatsappNumber" pattern="[6-9][0-9]{9}">
+            </div>
+            <div class="form-group">
+                <label for="address">Full Address (Block, Street, City, Pincode)</label>
+                <textarea id="address" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="place-order-btn">Place Order</button>
+        </form>
+    </main>
+
+    <script>
+        const isWhatsappCheckbox = document.getElementById('isWhatsapp');
+        const whatsappGroup = document.getElementById('whatsapp-group');
+
+        isWhatsappCheckbox.addEventListener('change', () => {
+            whatsappGroup.style.display = isWhatsappCheckbox.checked ? 'none' : 'block';
+        });
+
+        document.getElementById('checkoutForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const userId = localStorage.getItem('userId');
+            if (!userId) {
+                alert('You must be logged in to place an order.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            let totalPrice = 0;
+            cart.forEach(item => { totalPrice += parseFloat(item.price); });
+
+            const mobileNumber = document.getElementById('mobileNumber').value;
+            const orderDetails = {
+                userId,
+                cartItems: cart,
+                totalPrice,
+                fullName: document.getElementById('fullName').value,
+                mobileNumber: `+91${mobileNumber}`,
+                whatsappNumber: isWhatsappCheckbox.checked ? `+91${mobileNumber}` : `+91${document.getElementById('whatsappNumber').value}`,
+                address: document.getElementById('address').value
+            };
+
+            const response = await fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderDetails)
+            });
+
+            if (response.ok) {
+                alert('Order placed successfully! Thank you.');
+                localStorage.removeItem('cart');
+                window.location.href = 'shop.html';
+            } else {
+                alert('There was an error placing your order. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

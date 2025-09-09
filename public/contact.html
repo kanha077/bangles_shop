@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us | Meera Bangles</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+    <script src="cart.js" defer></script>
+
+    <style>
+        :root { --primary-color: #b08d57; --secondary-color: #4a4a4a; --background-color: #fdfaf6; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Montserrat', sans-serif; background-color: var(--background-color); color: var(--secondary-color); line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Header & Navigation */
+        .main-header { background-color: #fff; box-shadow: 0 2px 5px rgba(0,0,0,0.1); padding: 1rem 0; }
+        .main-header .container { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.8rem; color: var(--primary-color); text-decoration: none; font-family: 'Playfair Display', serif; }
+        .main-nav ul { list-style: none; display: flex; gap: 25px; align-items: center; }
+        .main-nav a { text-decoration: none; color: var(--secondary-color); font-weight: 500; }
+        
+        /* Page Content */
+        .page-header { padding-top: 60px; padding-bottom: 40px; }
+        .page-header h1 { font-size: 3rem; text-align: center; font-family: 'Playfair Display', serif; }
+
+        .contact-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 50px; align-items: flex-start; }
+        .contact-details h3 { font-size: 1.5rem; color: var(--primary-color); margin-bottom: 1rem; font-family: 'Playfair Display', serif; }
+        .contact-details p { margin-bottom: 1rem; }
+        .contact-form label { display: block; margin-bottom: 8px; font-weight: 500; }
+        .contact-form input, .contact-form textarea { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 5px; font-size: 1rem; }
+        .contact-form button { background-color: var(--primary-color); color: #fff; padding: 15px 30px; border-radius: 5px; font-weight: bold; border: none; cursor: pointer; width: 100%; }
+        #form-message { margin-top: 15px; font-weight: 500; }
+        .success { color: green; }
+
+        /* Footer */
+        .main-footer { background-color: var(--secondary-color); color: #fff; padding: 40px 0; text-align: center; margin-top: 60px; }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+              .contact-grid {
+        grid-template-columns: 1fr; /* Stack contact details and form */
+    }
+            .container { padding: 0 15px; }
+            .main-header .container { flex-direction: column; gap: 15px; }
+            .main-nav ul { padding: 0; justify-content: center; flex-wrap: wrap; }
+            .page-header { padding: 40px 0; }
+            .page-header h1 { font-size: 2.5rem; }
+            .categories { gap: 10px; margin-bottom: 30px; }
+            .category-btn { padding: 8px 16px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <div class="container">
+            <a href="index.html" class="logo"> Meera Bangles ✨</a>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="shop.html">Shop</a></li>
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li id="user-status"><a href="login.html">Login / Sign Up</a></li>
+                    <li><a href="cart.html">🛒 Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header"><h1>Get In Touch</h1></div>
+        <section class="contact-section">
+            <div class="contact-grid">
+                <div class="contact-details">
+                    <h3>Contact Information</h3>
+                    <p>Have a question or a special request? We'd love to hear from you.</p>
+                    <p><strong>📍 Address:</strong><br>Nai Sadak, Guna, Madhya Pradesh, India</p>
+                    <p><strong>📧 Email:</strong><br>contact@meerabangles.com</p>
+                    <p><strong>📞 Phone:</strong><br>+91 98765 43210</p>
+                </div>
+                <div class="contact-form">
+                    <form id="contactForm">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" name="name" required>
+
+                        <label for="email">Your Email</label>
+                        <input type="email" id="email" name="email" required>
+
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" rows="6" required></textarea>
+
+                        <button type="submit">Send Message</button>
+                    </form>
+                    <div id="form-message"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container"><p>&copy; 2025 Meera bangles . All Rights Reserved.</p></div>
+    </footer>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const form = event.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            const messageDiv = document.getElementById('form-message');
+
+            const response = await fetch('/submit-contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                messageDiv.textContent = 'Thank you! Your message has been sent.';
+                messageDiv.className = 'success';
+                form.reset();
+            } else {
+                messageDiv.textContent = 'Sorry, there was an error. Please try again.';
+                messageDiv.className = 'error';
+            }
+        });
+    </script>
+
+</body>
+</html>
